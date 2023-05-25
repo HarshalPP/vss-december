@@ -5,30 +5,95 @@ const redis = require('redis');
 // const client = createClient();
 const client = redis.createClient();
 
-exports.create = async (req, res) => {
-    // Rest of the code will go here
-    const user = new AddStock({
-        item: req.body.item,
-        company: req.body.company,
-        length: req.body.length,
-        width: req.body.width,
-        topColor: req.body.topColor,
-        thickness: req.body.thickness,
-        temper: req.body.temper,
-        coating: req.body.coating,
-        grade: req.body.grade,
-        guardFilm: req.body.guardFilm,
-        batchNumber: req.body.batchNumber,
-        purchaseNumber: req.body.purchaseNumber
-    });
+// exports.create = async (req, res) => {
+//     // Rest of the code will go here
+//     const user = new AddStock({
+//         item: req.body.item,
+//         company: req.body.company,
+//         length: req.body.length,
+//         width: req.body.width,
+//         topColor: req.body.topColor,
+//         thickness: req.body.thickness,
+//         temper: req.body.temper,
+//         coating: req.body.coating,
+//         grade: req.body.grade,
+//         guardFilm: req.body.guardFilm,
+//         batchNumber: req.body.batchNumber,
+//         purchaseNumber: req.body.purchaseNumber
+//     });
 
+//     try {
+//         const newUser = await user.save()
+//         res.status(200).json({ newUser });
+//     } catch (err) {
+//         res.status(400).json({ message: err.message });
+//     }
+// }
+exports.create = async (req, res) => {
     try {
-        const newUser = await user.save()
-        res.status(200).json({ newUser });
+      const {
+        item,
+        company,
+        topColor,
+        thickness,
+        width,
+        length,
+        temper,
+        coating,
+        grade,
+        guardFilm,
+        batchNumber,
+        purchaseNumber,
+        Weight
+      } = req.body;
+  
+      const existingStock = await AddStock.findOne({
+        item,
+        company,
+        topColor,
+        thickness,
+        width,
+        length,
+        temper,
+        coating,
+        grade,
+        guardFilm,
+        batchNumber,
+        purchaseNumber,
+      });
+  
+      if (existingStock) {
+        existingStock.Weight += Weight;
+        await existingStock.save();
+        console.log('Stock updated successfully:', existingStock);
+        res.status(200).json({ message: 'Stock updated successfully', stock: existingStock });
+      } else {
+        // If the stock doesn't exist, create a new one
+        const newStock = new AddStock({
+          item,
+          company,
+          length,
+          width,
+          topColor,
+          thickness,
+          temper,
+          coating,
+          grade,
+          guardFilm,
+          batchNumber,
+          purchaseNumber,
+          Weight
+        });
+        await newStock.save();
+        console.log('Stock created successfully:', newStock);
+        res.status(200).json({ message: 'Stock created successfully', stock: newStock });
+      }
     } catch (err) {
-        res.status(400).json({ message: err.message });
+      console.error('Error creating stock:', err);
+      res.status(500).json({ message: err.message });
     }
-}
+  };
+
 client.on('error', (err) => {
     console.error('Redis error:', err);
 });
