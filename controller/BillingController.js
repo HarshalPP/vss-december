@@ -69,13 +69,25 @@ exports.getbyid = async (req, res) => {
 }
 
 /// for get by productId
+// exports.gt = async (req, res) => {
+//     try { proid=req.params.id
+//         const userList = await salesorder.find({ 'products' : { "$elemMatch" : { 'productId':proid } }})
+//         res.json({ "status": 200, "msg": 'data has been fetched', res: userList });
+//     } catch (err) {
+//         res.status(400).json({ message: err.message });
+//     }
+// }
+
+
+
 exports.gt = async (req, res) => {
-    try { proid=req.params.id
-        const userList = await salesorder.find({ 'products' : { "$elemMatch" : { 'productId':proid } }})
-        res.json({ "status": 200, "msg": 'data has been fetched', res: userList });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
+  try {
+      const proid = req.params.id;
+      const userList = await salesorder.find({ 'products.productId': proid });
+      res.json({ "status": 200, "msg": 'data has been fetched', res: userList });
+  } catch (err) {
+      res.status(400).json({ message: err.message });
+  }
 }
 
 
@@ -254,7 +266,7 @@ exports.get = async (req,res,next)=>{
     
 
     const last_date=new Date(req.query.currentDate);
-    const endDate =new Date(last_date.setHours(23,00,00)).toISOString();
+    const endDate =new Date(last_date.setHours(23,0,0)).toISOString();
     
     var data = await salesorder.aggregate([{
         $match: {
@@ -310,7 +322,7 @@ exports.getSalesIdAndDate = async (req,res,next)=>{
     const current_date=new Date(req.query.currentDate).toISOString();
     
     const last_date=new Date(req.query.currentDate);
-    const endDate =new Date(last_date.setHours(23,00,00)).toISOString();
+    const endDate =new Date(last_date.setHours(23,0,0)).toISOString();
     
     
     const output = await salesorder.find({$and : [{'sales_id':sale_id},{currentDate:{
@@ -356,7 +368,7 @@ exports.getOrderstatusAndDate = async (req,res,next)=>{
     const current_date=new Date(req.query.currentDate).toISOString();
    
     const last_date=new Date(req.query.currentDate);
-    const endDate =new Date(last_date.setHours(23,00,00)).toISOString();
+    const endDate =new Date(last_date.setHours(23,0,0)).toISOString();
     
     const output = await salesorder.find({$and : [{'orderstatus':orderstatus},{currentDate:{
       $gte: current_date, $lte: endDate}}]}).sort({_id:-1}).limit(limit).skip(startIndex);
@@ -398,7 +410,7 @@ exports.getOrderstatusAndDate = async (req,res,next)=>{
   }
       const current_date=new Date(req.body.currentDate).toISOString();
       const last_date=new Date(req.body.currentDate);
-      const endDate =new Date(last_date.setHours(23,00,00)).toISOString();
+      const endDate =new Date(last_date.setHours(23,0,0)).toISOString();
   try { 
         
         const productiondata = await salesorder.find({$and: [{'products' : {"$elemMatch" : { 'pIn_id':proid}} },

@@ -12,6 +12,8 @@ router.get("/role/:role", token, usermanagementController.role);
 // Create One Route
 router.post("/create", token, usermanagementController.create);
 //Put One 
+
+router.post("/login",token,usermanagementController.login)
 router.put("/edit/:id", token, usermanagementController.edit);
 
 //image open in browser

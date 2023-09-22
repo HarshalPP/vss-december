@@ -9,7 +9,6 @@ router.get("/getby/:id", Stock_Controller.getbyid);
 router.put("/edit/:id", Stock_Controller.edit);
 router.delete("/delete/:id",Stock_Controller.delete);
 router.get("/Sum", Stock_Controller.Manoj)
-
-
+router.post("/batch_list", Stock_Controller.batch_list)
 
 module.exports = router;                         

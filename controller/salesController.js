@@ -27,7 +27,7 @@ exports.create = async(req, res) => {
         deliveryDate: req.body.deliveryDate,
         note: req.body.note,
         orderstatus: req.body.orderstatus, // 1-red -> not start, 2-orange -> in process, 3-green -> complete
-        products: req.body.products,
+        products: req.body.isOrderReady,
         //--------production head data--------
         ph_id: req.body.ph_id,
         ph_name: req.body.ph_name,

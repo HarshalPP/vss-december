@@ -17,7 +17,7 @@
     "custom-env": "^2.0.1",
     "date-fns": "^0.8.0",
     "dotenv": "^8.6.0",
-    "express-session": "^1.17.2",
+    "express-session": "^1.17.3",
     "isodate": "^0.1.4",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",

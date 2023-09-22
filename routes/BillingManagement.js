@@ -63,6 +63,7 @@ router.delete("/delete/:id", token, billing_Controller.delete);
 
 router.get("/gt/:id", token, billing_Controller.gt);
 router.post("/gt/:id", token, billing_Controller.updatebyid);
+router.get("/allRecords",token,billing_Controller.allRecords)
 
 
 // token

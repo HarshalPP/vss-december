@@ -6,114 +6,211 @@ var md5 = require('md5');
 const secretkey = process.env.SECRETKEY;
 const mongoose = require('mongoose');
 
-exports.login = async (req,res) => {
-    // Rest of the code will go here
+// exports.login = async (req,res) => {
+//     // Rest of the code will go here
 
-    try {
+//     try {
         
-       const newUser = await UserManagement.findOne({ 'phone_no': req.body.phone_no, 'password': md5(req.body.password) });
+//        const newUser = await UserManagement.findOne({ 'phone_no': req.body.phone_no, 'password': md5(req.body.password) });
 
-        if (newUser != '' && newUser != null) {
-            jwt.sign({ newUser }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-                res.status(200).json(
-                    {
-                        "status": "200",
-                        "message": "Successfully LogedIn",
-                        "data": {
-                            "_id": newUser['_id'],
-                            "user_id": newUser['user_id'],
-                            "role": newUser['role'],
-                            "firstName": newUser['firstName'],
-                            "lastName": newUser['lastName'],
-                            "phone_no": newUser['phone_no'],
-                            "email": newUser['email'],
-                            "address": newUser['address'],
-                            "city": newUser['city'],
-                            "pincode": newUser['pincode'],
-                            "joined_date": newUser['joined_date'],
-                            "shift_time": newUser['shift_time'],
-                            "tenure": newUser['tenure'],
-                            "user_image":newUser['user_image'],
-                            token
-                        }
-                    });
+//         if (newUser != '' && newUser != null) {
+//             jwt.sign({ newUser }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+//                 res.status(200).json(
+//                     {
+//                         "status": "200",
+//                         "message": "Successfully LogedIn",
+//                         "data": {
+//                             "_id": newUser['_id'],
+//                             "user_id": newUser['user_id'],
+//                             "role": newUser['role'],
+//                             "firstName": newUser['firstName'],
+//                             "lastName": newUser['lastName'],
+//                             "phone_no": newUser['phone_no'],
+//                             "email": newUser['email'],
+//                             "address": newUser['address'],
+//                             "city": newUser['city'],
+//                             "pincode": newUser['pincode'],
+//                             "joined_date": newUser['joined_date'],
+//                             "shift_time": newUser['shift_time'],
+//                             "tenure": newUser['tenure'],
+//                             "user_image":newUser['user_image'],
+//                             token
+//                         }
+//                     });
 
-            });
-
-
-        }
-        else {
-            res.status(200).json({ "status": "200", "message": "no record found" });
-
-        }
+//             });
 
 
+//         }
+//         else {
+//             res.status(200).json({ "status": "200", "message": "no record found" });
+
+//         }
+
+
+//     } catch (err) {
+//         res.status(400).json({ message: err.message });
+//     }
+// }
+
+exports.login = async (req, res) => {
+    try {
+      const { phone_no, password } = req.body;
+      const user = await UserManagement.findOne({ phone_no, password: md5(password) });
+  
+      if (user) {
+        const token = jwt.sign({ user }, 'secretkey', { expiresIn: '24h' });
+        res.status(200).json({
+          status: 200,
+          message: 'Successfully Logged In',
+          data: {
+            _id: user._id,
+            user_id: user.user_id,
+            role: user.role,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone_no: user.phone_no,
+            email: user.email,
+            address: user.address,
+            city: user.city,
+            pincode: user.pincode,
+            joined_date: user.joined_date,
+            shift_time: user.shift_time,
+            tenure: user.tenure,
+            user_image: user.user_image,
+            token
+          }
+        });
+      } else {
+        res.status(200).json({ status: 200, message: 'No record found' });
+      }
     } catch (err) {
-        res.status(400).json({ message: err.message });
+      res.status(400).json({ message: err.message });
     }
-}
+  };
+  
 //create
 
-exports.create = async (req, res) => {
+// exports.create = async (req, res) => {
     
-    try{
-        const {phone_no}=req.body;
-       const newUser= await UserManagement.findOne({phone_no});
-           if(!newUser){
-            var Storage = multer.diskStorage({
-                destination: function(req, file, callback) {
-                callback(null, "./User_Profile_Images");
-                },
+//     try{
+//         const {phone_no}=req.body;
+//        const newUser= await UserManagement.findOne({phone_no});
+//            if(!newUser){
+//             var Storage = multer.diskStorage({
+//                 destination: function(req, file, callback) {
+//                 callback(null, "./User_Profile_Images");
+//                 },
                 
-                filename: function(req, file, callback) {
-                  //var path="http://13.126.107.114/api/v1/";
-                callback(null,file.fieldname+ "_" + Date.now() + "_" + file.originalname);
-                }
-              });
+//                 filename: function(req, file, callback) {
+//                   //var path="http://13.126.107.114/api/v1/";
+//                 callback(null,file.fieldname+ "_" + Date.now() + "_" + file.originalname);
+//                 }
+//               });
              
-              var upload = multer({
-                storage: Storage
-                }).single("user_image"); //Field name and max count 
+//               var upload = multer({
+//                 storage: Storage
+//                 }).single("user_image"); //Field name and max count 
                
-                upload(req,res,function(err){
-                    const user = new UserManagement({
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    phone_no: req.body.phone_no,
-                    role: req.body.role,
-                    email: req.body.email,
-                    address: req.body.address,
-                    city: req.body.city,
-                    pincode: req.body.pincode,
-                    joined_date: req.body.joined_date,
-                    shift_time: req.body.shift_time,
-                    tenure: req.body.tenure,
-                    user_id: req.body.user_id,
-                    password: md5(req.body.password),
-                    user_image:'65.0.129.68/api/v1/user_management/profilePicture/'+req.file.filename  
-                    });
+//                 upload(req,res,function(err){
+//                     const user = new UserManagement({
+//                     firstName: req.body.firstName,
+//                     lastName: req.body.lastName,
+//                     phone_no: req.body.phone_no,
+//                     role: req.body.role,
+//                     email: req.body.email,
+//                     address: req.body.address,
+//                     city: req.body.city,
+//                     pincode: req.body.pincode,
+//                     joined_date: req.body.joined_date,
+//                     shift_time: req.body.shift_time,
+//                     tenure: req.body.tenure,
+//                     user_id: req.body.user_id,
+//                     password: md5(req.body.password),
+//                     user_image:'65.0.129.68/api/v1/user_management/profilePicture/'+req.file.filename  
+//                     });
                 
-                 user.save((err,data) => {
-                        if (err) {
-                            return res.status(200).send({ message: "User Already Existed With this Phone Number" });
-                        } else{
-                           return res.status(201).json({ message: "user created", data });  
-                        }
-                      });
+//                  user.save((err,data) => {
+//                         if (err) {
+//                             return res.status(200).send({ message: "User Already Existed With this Phone Number" });
+//                         } else{
+//                            return res.status(201).json({ message: "user created", data });  
+//                         }
+//                       });
 
-               })
-            }
-      else {
-            return res
-              .status(200)
-              .send({ status: 200, message: "User Already Exist" });
-          }
+//                })
+//             }
+//       else {
+//             return res
+//               .status(200)
+//               .send({ status: 200, message: "User Already Exist" });
+//           }
             
-    }catch(err){
-        console.log(err);
-        res.status(400).json({message:"Somthing Went Wrong"});
+//     }catch(err){
+//         console.log(err);
+//         res.status(400).json({message:"Somthing Went Wrong"});
+//     }
+// }
+
+
+
+exports.create = async (req, res) => {
+    try {
+      const { phone_no } = req.body;
+      const newUser = await UserManagement.findOne({ phone_no });
+      
+      if (!newUser) {
+        var Storage = multer.diskStorage({
+          destination: function (req, file, callback) {
+            callback(null, "./User_Profile_Images");
+          },
+          filename: function (req, file, callback) {
+            callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+          },
+        });
+  
+        var upload = multer({ storage: Storage }).single("user_image");
+  
+        upload(req, res, function (err) {
+          if (req.file) { // Check if req.file exists
+            const user = new UserManagement({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              phone_no: req.body.phone_no,
+              role: req.body.role,
+              email: req.body.email,
+              address: req.body.address,
+              city: req.body.city,
+              pincode: req.body.pincode,
+              joined_date: req.body.joined_date,
+              shift_time: req.body.shift_time,
+              tenure: req.body.tenure,
+              user_id: req.body.user_id,
+              password: md5(req.body.password),
+              user_image: '65.0.129.68/api/v1/user_management/profilePicture/'+req.file.filename
+            });
+  
+            user.save((err, data) => {
+              if (err) {
+                return res.status(200).send({ message: "User Already Exists With this Phone Number" });
+              } else {
+                return res.status(201).json({ message: "User created", data });
+              }
+            });
+          } else {
+            // Handle case when no file is uploaded
+            return res.status(400).json({ message: "No file uploaded" });
+          }
+        });
+      } else {
+        return res.status(200).send({ status: 200, message: "User Already Exists" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Something Went Wrong" });
     }
-}
+  };
+  
 //find role
 exports.role= async (req, res) => {
     // Rest of the code will go here
