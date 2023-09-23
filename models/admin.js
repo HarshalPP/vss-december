@@ -12,14 +12,16 @@ const adminSchema = new Schema({
    {
      type:String,
      required:true
-   },
-   status:
-   {
-     type:String,
-     default:false
-   },
-   role: { type: String, 
-    enum: ['salesManager','productionHead', 'productManager','stockManager'] }
+   }
+  //  status:
+  //  {
+  //    type:String,
+  //    default:false
+  //  },
+  //  role: { type: String, 
+  //   enum: ['salesManager','productionHead', 'productManager','stockManager'],
+  //   required:false
+  //  }
 });
 const Adminlogin = mongoose.model('admins', adminSchema);
 module.exports = Adminlogin;

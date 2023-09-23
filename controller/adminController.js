@@ -63,8 +63,8 @@ exports.auth = async (req, res) => {
   try {
     const newUser = await Adminlogin.findOne({
       username: req.body.username,
-      password: md5(req.body.password),
-      role: req.body.role
+      password: md5(req.body.password)
+      // role: req.body.role
     });
 
     if (newUser) {
@@ -107,14 +107,15 @@ exports.auth = async (req, res) => {
 // Create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { username, password, status, role } = req.body;
+    // const { username, password, status, role } = req.body;
+    const { username, password } = req.body;
 
     // Create a new user
     const newUser = new Adminlogin({
       username: username,
       password: md5(password), // Hash the password
-      status: status,
-      role: role
+      // status: status,
+      // role: role
 
     });
 
