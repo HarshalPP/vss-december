@@ -61,6 +61,10 @@ const addStockSchema = new Schema({
    {
        type:Number,
        required:true
+   },
+   Weight:{
+    type:Number,
+    required:true
    }
    
 });

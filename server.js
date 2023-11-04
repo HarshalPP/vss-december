@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
+const AWS = require('aws-sdk');
 
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true,

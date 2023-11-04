@@ -59,8 +59,11 @@ exports.create = async (req, res) => {
         grade,
         guardFilm,
         batchNumber,
-        purchaseNumber,
+        purchaseNumber
       });
+
+
+      console.log("existingStock data is" , existingStock)
   
       if (existingStock) {
         existingStock.Weight += Weight;
@@ -89,10 +92,84 @@ exports.create = async (req, res) => {
         res.status(200).json({ message: 'Stock created successfully', stock: newStock });
       }
     } catch (err) {
-      console.error('Error creating stock:', err);
+      console.log('Error creating stock:', err);
       res.status(500).json({ message: err.message });
     }
   };
+
+// exports.create = async (req, res) => {
+//   try {
+//     const {
+//       item,
+//       company,
+//       topColor,
+//       thickness,
+//       width,
+//       length,
+//       temper,
+//       coating,
+//       grade,
+//       guardFilm,
+//       batchNumber,
+//       purchaseNumber,
+//       Weight
+//     } = req.body;
+
+//     // Find the existing stock item using the properties (excluding Weight)
+//     const existingStock = await AddStock.findOne({
+//       item,
+//       company,
+//       topColor,
+//       thickness,
+//       width,
+//       length,
+//       temper,
+//       coating,
+//       grade,
+//       guardFilm,
+//       batchNumber,
+//       purchaseNumber
+//     });
+
+//     if (existingStock) {
+//       // Check if the provided Weight is different from the existing data
+//       if (existingStock.Weight !== Weight) {
+//         // Update the weight to the new Weight provided
+//         existingStock.Weight = Weight;
+//         await existingStock.save();
+//         console.log('Stock updated successfully:', existingStock);
+//         res.status(200).json({ message: 'Stock updated successfully', stock: existingStock });
+//       } else {
+//         console.log('Weight is the same; no update needed.');
+//         res.status(200).json({ message: 'Weight is the same; no update needed', stock: existingStock });
+//       }
+//     } else {
+//       // If the stock doesn't exist, create a new one with the provided Weight
+//       const newStock = new AddStock({
+//         item,
+//         company,
+//         length,
+//         width,
+//         topColor,
+//         thickness,
+//         temper,
+//         coating,
+//         grade,
+//         guardFilm,
+//         batchNumber,
+//         purchaseNumber,
+//         Weight
+//       });
+//       await newStock.save();
+//       console.log('Stock created successfully:', newStock);
+//       res.status(200).json({ message: 'Stock created successfully', stock: newStock });
+//     }
+//   } catch (err) {
+//     console.log('Error creating or updating stock:', err);
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
 
 client.on('error', (err) => {
     console.error('Redis error:', err);

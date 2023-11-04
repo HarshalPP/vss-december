@@ -25,7 +25,7 @@ exports.create = async (req, res) => {
     // // Generate a JWT token for the user
     // const token = jwt.sign({ user: savedUser }, keyvalue, { expiresIn: '24h' });
 
-    res.status(200).json({ message: 'User created successfully', user: savedUser, token });
+    res.status(200).json({ message: 'User created successfully', user: savedUser });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

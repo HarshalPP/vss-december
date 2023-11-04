@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/jest": "^29.5.0",
+    "aws-sdk": "^2.1464.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "custom-env": "^2.0.1",
