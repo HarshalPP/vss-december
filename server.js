@@ -29,6 +29,7 @@ const addStockRouter=require("./routes/addStock");
 const stockManager=require('./routes/stockManager')
 const mobileRouter=require('./routes/mobile')
 
+
 app.use("/admin", adminRouter);
 app.use("/sales", salesRouter);
 app.use("/salesreadymade", salesreadymadeRouter);
