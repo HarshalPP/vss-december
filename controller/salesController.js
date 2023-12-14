@@ -370,6 +370,9 @@ exports.delete = async(req, res) => {
             res.status(500).json({ message: err.message });
         }
     }
+
+
+    
     //pagination 
 exports.allRecords = async(req, res) => {
     // Rest of the code will go here
